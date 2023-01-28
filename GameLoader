@@ -11,5 +11,5 @@ elseif game.PlaceId == 11220569194 then -- Clicker Party Simulator
     loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/CPS"))()
   
 else
-    loadstring(game:HttpGet(""))()   
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/Universal"))()  --Universal
 end
