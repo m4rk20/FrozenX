@@ -1,0 +1,492 @@
+getgenv().AC = false;
+getgenv().AR = false;
+getgenv().AE = false;
+getgenv().AS = false;
+getgenv().AP = false;
+getgenv().AU = false;
+getgenv().ACT = false;
+getgenv().ToggleAntiAfk = false
+
+local VU = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+    if ToggleAntiAfk == true then
+        VU:CaptureController()
+        VU:ClickButton2(Vector2.new())
+    end
+end)
+
+local functionUpgradePath = game:GetService("ReplicatedStorage").Functions
+local eventPotionPath = game:GetService("ReplicatedStorage").Events.Potion
+local eventPath = game:GetService("ReplicatedStorage").Events
+
+function autoUpgrade()
+    spawn(function()
+        while getgenv().AU == true do
+            local args = {[1] = "ClickMultiplier"} functionUpgradePath.Upgrade:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = "RebirthButtons"} functionUpgradePath.Upgrade:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = "WalkSpeed"} functionUpgradePath.Upgrade:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = "GemsMultiplier"} functionUpgradePath.Upgrade:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = "PetEquip"} functionUpgradePath.Upgrade:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = "PetStorage"} functionUpgradePath.Upgrade:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = "LuckMultiplier"} functionUpgradePath.Upgrade:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = "FasterFreeAutoClicker"} functionUpgradePath.Upgrade:InvokeServer(unpack(args)) wait(0.1)
+        end
+    end)
+end
+
+function Clicks()
+    spawn(function()
+        while getgenv().AP == true do
+            local args = {[1] = "x2Clicks",[2] = 1}
+            eventPotionPath:FireServer(unpack(args))
+            wait()
+        end
+    end)
+end
+
+function Gems()
+    spawn(function()
+        while getgenv().AP == true do
+            local args = {[1] = "x2Gems",[2] = 1}
+            eventPotionPath:FireServer(unpack(args))
+            wait()
+        end
+    end)
+end
+
+function Luck()
+    spawn(function()
+        while getgenv().AP == true do
+            local args = {[1] = "x2Luck",[2] = 1}
+            eventPotionPath:FireServer(unpack(args))
+            wait()
+        end
+    end)
+end
+
+function Re()
+    spawn(function()
+        while getgenv().AP == true do
+            local args = {[1] = "x2Rebirths",[2] = 1}
+            eventPotionPath:FireServer(unpack(args))
+            wait()
+        end
+    end)
+end
+
+function XP()
+    spawn(function()
+        while getgenv().AP == true do
+            local args = {[1] = "x2PetXP",[2] = 1}
+            eventPotionPath:FireServer(unpack(args))
+            wait()
+        end
+    end)
+end
+
+function Speed()
+    spawn(function()
+        while getgenv().AP == true do
+            local args = {[1] = "x2HatchSpeed",[2] = 1}
+            eventPotionPath:FireServer(unpack(args))
+            wait()
+        end
+    end)
+end
+
+function Max()
+    local args = {[1] = "Ocean"}
+    eventPath.WorldBoost:FireServer(unpack(args))
+end
+
+function AutoClick()
+    spawn(function()
+        while getgenv().AC == true do
+            eventPath.Click3:FireServer()
+            wait()
+        end
+    end)
+end
+
+function AR(Number)
+    if getgenv().AR then
+        while getgenv().AR do
+            game:GetService("ReplicatedStorage").Events.Rebirth:FireServer(Number)
+            wait(0.5);
+        end
+    end
+end
+
+local EggsArray = {}
+for i , v in pairs(game:GetService("ReplicatedStorage").Assets.Eggs:GetChildren()) do
+    table.insert(EggsArray, v.Name)
+end
+
+function AutoEgg(Type)
+    if getgenv().AE then
+        while getgenv().AE do
+            functionUpgradePath.Unbox:InvokeServer(Type,"Triple")
+            wait(0.5);
+        end
+    end
+   
+end
+
+function Skin()
+    spawn(function ()
+        while getgenv().AS == true do
+            local args = {[1] = 1} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 2} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 3} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 4} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 5} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 6} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 7} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 8} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 9} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 10} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 11} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 12} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 13} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 14} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 15} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 16} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 17} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 18} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 19} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 20} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 21} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 22} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+            local args = {[1] = 23} functionUpgradePath.TapSkin:InvokeServer(unpack(args)) wait(0.1)
+        end
+    end)
+end
+
+function TPTo(PCFrame)
+    local plr = game.Players.LocalPlayer;
+           if plr.Character then
+        plr.Character.HumanoidRootPart.CFrame = PCFrame
+    end
+end
+
+function ACT()
+    if getgenv().ACT then
+        while getgenv().ACT do
+            functionUpgradePath.Request:InvokeServer("CraftAll",{})
+            wait(0.5);
+        end
+    end
+end
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/myscripts/main/Mercury.lua"))()
+
+local gui = Library:create{
+    Theme = Library.Themes.Serika
+}
+
+local mainTab = gui:tab{
+    Icon = "rbxassetid://6034996695",
+    Name = "Main"
+}
+
+local potionTab = gui:tab{
+    Icon = "rbxassetid://4935580111",
+    Name = "Potions"
+}
+
+local eggTab = gui:tab{
+    Icon = "rbxassetid://3081760043",
+    Name = "Eggs"
+}
+
+local miscTab = gui:tab{
+    Icon = "rbxassetid://8559790237",
+    Name = "Miscellaneous"
+}
+
+mainTab:toggle{
+	Name = "Auto Clicker",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().AC = v
+        if v then
+            AutoClick();
+        end
+end}
+
+mainTab:toggle{
+	Name = "Auto Buy Skin",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().AS = v
+        if v then
+            Skin();
+        end
+end}
+
+mainTab:toggle{
+	Name = "Auto Buy Upgrades",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().AU = v
+        if v then
+            autoUpgrade();
+        end
+end}
+
+local selectedRebirth
+local RebirthsArray = {}
+for i = 1, 67 do
+    table.insert(RebirthsArray, i)
+end
+
+mainTab:dropdown({
+    Name = "Select Number of Rebirths",
+    StartingText = "1",
+    Items = RebirthsArray,
+    Callback = function(v)
+        selectedRebirth = v
+        print("Selected Rebirth: "..selectedRebirth)
+    end
+    })
+
+    if selectedRebirth == nil then
+        selectedRebirth = 1
+    end
+
+    mainTab:toggle{
+        Name = "Auto Rebirth",
+        Callback = function(v)
+            getgenv().AR = v
+            if getgenv().AR then
+            AR(selectedRebirth)
+        end
+end}
+
+potionTab:toggle{
+	Name = "Auto Buy Clicks",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().AP = v
+        if v then
+            Clicks();
+        end
+end}
+
+potionTab:toggle{
+	Name = "Auto Buy Gems",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().AP = v
+        if v then
+            Gems();
+        end
+end}
+
+potionTab:toggle{
+	Name = "Auto Buy Luck",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().AP = v
+        if v then
+            Luck();
+        end
+end}
+
+potionTab:toggle{
+	Name = "Auto Buy Pet XP",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().AP = v
+        if v then
+            XP();
+        end
+end}
+
+potionTab:toggle{
+	Name = "Auto Buy Hatch Speed",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().AP = v
+        if v then
+            Speed();
+        end
+end}
+
+local selectedEgg
+eggTab:dropdown({
+    Name = "Select Type Of Egg",
+    Description = "Some Eggs Are No Longer In Game",
+    StartingText = "1",
+    Items = EggsArray,
+    Callback = function(v)
+        selectedEgg = v
+        print("Selected Egg: "..selectedEgg)
+    end
+    })
+
+    if selectedEgg == nil then
+        selectedEgg = EggsArray[0]
+    end
+
+    eggTab:toggle{
+        Name = "Hatch Egg",
+        Callback = function(v)
+            getgenv().AE = v
+            if getgenv().AE then
+            AutoEgg(selectedEgg)
+        end
+end}
+
+eggTab:toggle{
+    Name = "Auto Craft",
+    Description = nil,
+    Callback = function(v)
+        getgenv().ACT = v
+        if getgenv().ACT then
+            ACT()
+        end
+end}
+
+eggTab:toggle{
+    Name = "Auto Equip Best Pet",
+    Description = nil,
+    Callback = function(state)
+        if state == true then
+            repeat wait(1)
+                for _, v in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.MainUI.PetsFrame.Additional.EquipBest.Click.MouseButton1Up)) do
+                v:Fire()
+                end
+            until state == false
+        elseif state == false then
+    end
+end}
+
+miscTab:slider({
+    Name = "Walk Speed",
+    Description = nil,
+    Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
+    end
+})
+
+miscTab:button({
+    Name = "Unlock Free Gamepasses",
+    Description = nil,
+    Callback = function()
+        for _, v in pairs(game:GetService("Players").LocalPlayer.Passes:GetChildren()) do
+            if v.Name ~= "FasterEggOpen" then
+            v.Value = true
+        end
+    end
+end})
+
+miscTab:button({
+    Name = "Collect Chests",
+    Description = nil,
+    Callback = function()
+        for _, v in pairs(game:GetService("Workspace").Scripts.Chests:GetDescendants()) do
+            if v.Name == "Touch" then
+                firetouchinterest(v, game.Players.LocalPlayer.Character.Head, 1)
+                firetouchinterest(v, game.Players.LocalPlayer.Character.Head, 0)
+            end
+        end
+    end
+})
+
+miscTab:button({
+    Name = "Max Multiplyer",
+    Description = nil,
+    Callback = function(v)
+        Max()
+end})
+
+miscTab:button({
+    Name = "Spin Daily Wheel",
+    Description = nil,
+    Callback = function(v)
+        functionUpgradePath.Spin:InvokeServer()
+end})
+
+miscTab:button({
+    Name = "NoClip",
+    Description = nil,
+    Callback = function(v)
+        local Noclip = nil
+        local Clip = nil
+
+        function noclip()
+            Clip = false
+            local function Nocl()
+                if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+                    for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                        if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+                            v.CanCollide = false
+                        end
+                    end
+                end
+                wait(0.21)
+            end
+            Noclip = game:GetService('RunService').Stepped:Connect(Nocl)
+        end
+
+        function clip()
+            if Noclip then Noclip:Disconnect() end
+            Clip = true
+        end
+
+        noclip()
+end})
+
+miscTab:button({
+    Name = "Rejoin Server",
+    Description = nil,
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        local Rejoin = coroutine.create(function()
+            local Success, ErrorMessage = pcall(function()
+                TeleportService:Teleport(game.PlaceId, LocalPlayer)
+            end)
+        
+            if ErrorMessage and not Success then
+                warn(ErrorMessage)
+            end
+        end)
+        
+        coroutine.resume(Rejoin)
+end})
+
+miscTab:button({
+    Name = "Anti-Report",
+    Description = nil,
+    Callback = function()
+        setfflag("AbuseReportScreenshot", "False")
+        setfflag("AbuseReportScreenshotPercentage", "0")
+end})
+
+miscTab:toggle{
+    Name = "Anti AFK",
+    Callback = function(state)
+        if state then
+            ToggleAntiAfk = true
+        elseif not state then
+            ToggleAntiAfk = false
+        end
+end}
+
+gui:credit{
+	Name = "Ryan",
+	Description = nil,
+	V3rm = nil,
+	Discord = "RyanR#8147"
+}
+
+gui:notification{
+	Title = "Alert",
+	Text = "Contact Me On Discord If Anything Stops Working",
+	Duration = 5,
+	Callback = function() end
+}
