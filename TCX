@@ -1,0 +1,391 @@
+local Player = game:GetService("Players").LocalPlayer or game:GetService("Players").PlayerAdded:Wait()
+local ChopLooping
+local BossLooping
+local OrbLooping
+local ChestLooping
+local ClaimLooping
+local HatchLooping
+local CraftLooping
+local BestLooping
+local BestDelay = 5
+local SelectedAreas = {}
+local SelectedLevels = {}
+local SelectedEgg
+local TripleHatch
+local Areas = {}
+local Levels = {"Closest Trees"}
+local Chests = {}
+local Eggs = {}
+local Loading = true
+
+while Loading and task.wait() do
+	for i,v in pairs(Player.Character:GetChildren()) do
+		if v.Name:match("Axe") then
+			Loading = false
+		end
+	end
+end
+
+local Knit = require(game:GetService("ReplicatedStorage").Packages.Knit)
+local TreeService = Knit.GetService("TreeService")
+local PetService = Knit.GetService("PetService")
+local Damage = TreeService.Damage
+local DataController = Knit.GetController("DataController")
+local EggService = Knit.GetService("EggService")
+local OrbService = Knit.GetService("OrbService")
+local RewardService = Knit.GetService("RewardService")
+local BossService = Knit.GetService("BossService")
+local AxeService = Knit.GetService("AxeService")
+local Trees = game:GetService("Workspace").Scripts.Trees
+
+for i,v in pairs(Trees:GetChildren()) do
+	table.insert(Areas, v.Name)
+end
+
+for i,v in pairs(Trees:GetDescendants()) do
+	if v.Name:match("level") and not table.find(Levels, v.Name) then
+		table.insert(Levels, v.Name)
+	end
+end
+
+for i,v in pairs(require(game:GetService("ReplicatedStorage").Shared.List.Chests)) do
+	if type(v) == "table" then
+		for e,r in pairs(v) do
+			table.insert(Chests, e)
+		end
+	end
+end
+
+for i,v in pairs(game:GetService("Workspace").Scripts.Eggs:GetChildren()) do
+	if not v.Name:match("Robux") then
+		table.insert(Eggs, v.Name)
+	end
+end
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/myscripts/main/MercuryUI"))()
+
+local gui = Library:create{
+    Theme = Library.Themes.Serika
+}
+
+local mainTab = gui:tab{
+    Icon = "rbxassetid://6034996695",
+    Name = "Main"
+}
+
+local eggTab = gui:tab{
+    Icon = "rbxassetid://3081760043",
+    Name = "Eggs"
+}
+
+local miscTab = gui:tab{
+    Icon = "rbxassetid://8559790237",
+    Name = "Miscellaneous"
+}
+
+mainTab:dropdown({
+    Name = "🏝 Area",
+    StartingText = "Select",
+    Items = Areas,
+    Callback = function(v)
+        if v ~= "" then
+            if table.find(SelectedAreas, v) then
+                table.remove(SelectedAreas, table.find(SelectedAreas, v))
+            else
+                table.insert(SelectedAreas, v)
+            end
+        end
+    end
+})
+
+mainTab:dropdown({
+    Name = "🔢 Level",
+    Items = Levels,
+    Callback = function(v)
+        if v ~= "" then
+            if table.find(SelectedLevels, v) then
+                table.remove(SelectedLevels, table.find(SelectedLevels, v))
+            else
+                table.insert(SelectedLevels, v)
+            end
+        end
+    end
+})
+
+mainTab:toggle{
+    Name = "🌲 Auto Chop",
+    CurrentValue = false,
+    Flag = "AutoChop",
+    Callback = function(v)
+        ChopLooping = v
+    end}
+
+    task.spawn(function()
+        while task.wait() do
+        if ChopLooping and #SelectedLevels > 0 then
+            if table.find(SelectedLevels, "Closest Trees") then
+                for i,v in pairs(Trees:GetChildren()) do
+                    for t,y in pairs(v:GetChildren()) do
+                        for j,k in pairs(y.Storage:GetChildren()) do
+                            if(Player.Character:WaitForChild("HumanoidRootPart").Position - k.PrimaryPart.Position).Magnitude < 30 then
+                                Damage:Fire(k.Name)
+                            end
+                        end
+                    end
+                end
+            else
+                for i,v in pairs(SelectedAreas) do
+                    for e,r in pairs(SelectedLevels) do
+                        if Trees:FindFirstChild(v):FindFirstChild(r) then
+                            if Trees:FindFirstChild(v):FindFirstChild(r).Storage:FindFirstChildOfClass("Model") then
+                                Damage:Fire(Trees:FindFirstChild(v):FindFirstChild(r).Storage:FindFirstChildOfClass("Model").Name)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+mainTab:toggle{
+    Name = "🐍 Auto Attack Bosses",
+	CurrentValue = false,
+	Flag = "AutoBoss",
+	Callback = function(Value)
+		BossLooping = Value
+	end,}
+
+    task.spawn(function()
+	    while task.wait() do
+		    if BossLooping then
+			    for i,v in pairs(game:GetService("Workspace").Scripts.Areas:GetDescendants()) do
+				    if v:IsA("Folder") and v.Name:match("Boss") then
+					    BossService.Damage:Fire(v.ID.Value)
+				end
+			end
+		end
+	end
+end)
+
+mainTab:toggle{
+    Name = "🔮 Auto Collect Orbs",
+	CurrentValue = false,
+	Flag = "AutoCollect",
+	Callback = function(Value)
+		OrbLooping = Value
+	end,}
+    task.spawn(function()
+	    while task.wait() do
+		    if OrbLooping then
+			    for i,v in pairs(game:GetService("Workspace").Scripts.Orbs.Storage:GetChildren()) do
+				OrbService.CollectOrbs:Fire({v.Name})
+				v:Destroy()
+			end
+		end
+	end
+end)
+
+mainTab:toggle{
+    Name = "💼 Auto Collect Chests",
+	CurrentValue = false,
+	Flag = "AutoChest",
+	Callback = function(Value)
+		ChestLooping = Value
+	end,}
+
+    task.spawn(function()
+	    while task.wait() do
+		    if ChestLooping then
+			    for i,v in pairs(Chests) do
+				RewardService:ClaimChest(v)
+			end
+		end
+	end
+end)
+
+mainTab:toggle{
+    Name = "🎁 Auto Claim Rewards",
+	CurrentValue = false,
+	Flag = "AutoClaim",
+	Callback = function(Value)
+		ClaimLooping = Value
+	end,}
+
+    task.spawn(function()
+	    while task.wait() do
+		    if ClaimLooping then
+		    	for i,v in pairs(Player.PlayerGui.MainUI.RewardsFrame.Main.Holder:GetChildren()) do
+		    		if v:IsA("Frame") and v.Claim.Visible == true then
+					firesignal(v.Click.MouseButton1Up)
+				end
+			end
+		end
+	end
+end)
+
+eggTab:dropdown({
+	Name = "🥚 Egg",
+	Items = Eggs,
+	StartingText = "1",
+	Flag = "SelectedEgg",
+	Callback = function(Value)
+		SelectedEgg = Value
+	end,
+})
+
+eggTab:toggle{
+    Name = "3️⃣ Triple Hatch",
+	CurrentValue = false,
+	Flag = "TripleHatch",
+	Callback = function(Value)
+		if Value then
+			TripleHatch = "triple"
+		else
+			TripleHatch = "single"
+		end
+	end,
+}
+
+eggTab:toggle{
+    Name = "🐣 Auto Hatch Egg",
+	CurrentValue = false,
+	Flag = "AutoHatch",
+	Callback = function(Value)
+		HatchLooping = Value
+	end,}
+
+    task.spawn(function()
+	    while task.wait() do
+	    	if HatchLooping and SelectedEgg then
+			EggService:Unbox(SelectedEgg, TripleHatch)
+		end
+	end
+end)
+
+eggTab:toggle{
+    Name = "⚒ Auto Craft Pets",
+	CurrentValue = false,
+	Flag = "AutoCraft",
+	Callback = function(Value)
+		CraftLooping = Value
+	end,}
+
+    task.spawn(function()
+	    while task.wait() do
+		    if CraftLooping then
+			PetService:CraftAll()
+		end
+	end
+end)
+
+eggTab:toggle{
+    Name = "🥇 Auto Equip Best",
+	CurrentValue = false,
+	Flag = "AutoEquipBest",
+	Callback = function(Value)
+		BestLooping = Value
+	end,}
+
+    task.spawn(function()
+	    while task.wait() do
+		    if BestLooping then
+			firesignal(Player.PlayerGui.MainUI.PetsFrame.Additional.EquipBest.Click.MouseButton1Up)
+			task.wait(BestDelay)
+		end
+	end
+end)
+
+eggTab:toggle{
+    Name = "🐌 Auto Equip Best Delay",
+	Range = {0, 60},
+	Increment = 1,
+	CurrentValue = 5,
+	Flag = "Delay",
+	Callback = function(Value)
+		BestDelay = Value
+	end,
+}
+
+eggTab:slider{
+	Name = "🐌 Auto Equip Best Delay",
+	Range = {0, 60},
+	Increment = 1,
+	CurrentValue = 5,
+	Flag = "Delay",
+	Callback = function(Value)
+		BestDelay = Value
+	end,
+}
+
+miscTab:slider{
+    Name = "Walk Speed",
+    Default = 50,
+    Min = 0,
+    Max = 100,
+    Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
+    end
+}
+
+miscTab:slider{
+	Name = "Jump Power",
+	Default = 50,
+	Min = 0,
+	Max = 100,
+	Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = v
+    end
+}
+
+miscTab:button({
+    Name = "NoClip",
+    Description = nil,
+    Callback = function(v)
+        local Noclip = nil
+        local Clip = nil
+
+        function noclip()
+            Clip = false
+            local function Nocl()
+                if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+                    for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                        if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+                            v.CanCollide = false
+                        end
+                    end
+                end
+                wait(0.21)
+            end
+            Noclip = game:GetService('RunService').Stepped:Connect(Nocl)
+        end
+
+        function clip()
+            if Noclip then Noclip:Disconnect() end
+            Clip = true
+        end
+
+        noclip()
+end})
+
+miscTab:button({
+    Name = "Anti-Report",
+    Description = nil,
+    Callback = function()
+        setfflag("AbuseReportScreenshot", "False")
+        setfflag("AbuseReportScreenshotPercentage", "0")
+end})
+
+gui:credit{
+	Name = "Ryan",
+	Description = nil,
+	V3rm = nil,
+	Discord = "RyanR#8147"
+}
+
+gui:notification{
+	Title = "Alert",
+	Text = "Contact Me On Discord If Anything Stops Working",
+	Duration = 5,
+	Callback = function() end
+}
