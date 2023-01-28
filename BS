@@ -178,7 +178,7 @@ function pickupt()
     end)
 end
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/myscripts/main/Mercury.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/myscripts/main/MercuryUI"))()
 
 local gui = Library:create{
     Theme = Library.Themes.Serika
