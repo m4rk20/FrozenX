@@ -1,0 +1,15 @@
+if game.PlaceId == 10404327868 then -- Timber Champions X
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/TCX"))()
+
+elseif game.PlaceId == 8540346411 then -- Rebirth Champions X
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/RCX"))()
+    
+elseif game.PlaceId == 4058282580 then -- Boxing Simulator
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/BS"))()
+  
+elseif game.PlaceId == 11220569194 then -- Clicker Party Simulator
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/CPS"))()
+  
+else
+    loadstring(game:HttpGet(""))()   
+end
