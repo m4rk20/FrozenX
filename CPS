@@ -1,0 +1,165 @@
+getgenv().autoTap = false;
+getgenv().autoChest = false;
+getgenv().autoRebirth = false;
+getgenv().autoHatch = false;
+
+local remotePath = game:GetService("ReplicatedStorage")
+
+function doTap()
+    spawn(function()
+        while getgenv().autoTap == true do
+            local args = {[1] = "e"}
+            remotePath.Click:FireServer(unpack(args))
+            wait()
+        end
+    end)
+end
+
+function autoChest(chest)
+    spawn(function ()
+        while getgenv().autoChest == true do
+            remotePath.BuyChest:FireServer(chest)
+            wait()
+        end      
+    end)
+end
+
+function autoRebirth(rebirthAmount)
+    spawn(function ()
+        while getgenv().autoRebirth == true do
+            remotePath.Rebirth:FireServer(rebirthAmount)
+            wait()
+        end      
+    end)
+end
+
+function autoHatch()
+    spawn(function()
+        while getgenv().autoHatch == true and wait() do 
+            remotePath.HatchEvents.Hatch:FireServer(unpack(hatcharg))
+            wait()
+        end
+    end)
+end
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/myscripts/main/MercuryUI"))()
+
+local gui = Library:create{
+    Theme = Library.Themes.Serika
+}
+
+local mainTab = gui:tab{
+    Icon = "rbxassetid://9964401831", --rbxassetid://6034996695
+    Name = "Main"
+}
+
+local eggTab = gui:tab{
+    Icon = "rbxassetid://3081760043",
+    Name = "Eggs"
+}
+
+local miscTab = gui:tab{
+    Icon = "rbxassetid://8559790237",
+    Name = "Miscellaneous"
+}
+
+local chestTab = gui:tab{
+    Icon = "rbxassetid://10026102934",
+    Name = "Chests"
+}
+
+mainTab:toggle{
+	Name = "Auto Clicker",
+	Description = nil,
+	Callback = function(v) 
+        getgenv().autoTap = v
+        if v then
+            doTap();
+        end
+end}
+
+local selectedRebirths;
+mainTab:dropdown({
+    Name = "Select Rebirth Amount",
+    StartingText = "Select",
+    Items = {
+        {"1 Rebirths",1},{"5 Rebirths",2},{"10 Rebirths",3},{"50 Rebirths",4},{"100 Rebirths",5},{"200 Rebirths",6},{"500 Rebirths",7},{"750 Rebirths",8},{"1K Rebirths",9},{"1.5K Rebirths",10},{"2K Rebirths",11},{"4K Rebirths",12},{"8K Rebirths",13},{"10K Rebirths",14},{"15K Rebirths",15},{"20K Rebirths",16},{"30K Rebirths",17},{"50K Rebirths",18},{"75K Rebirths",19},{"100K Rebirths",20},{"500K Rebirths",21},{"1.25M Rebirths",22},{"1.5M Rebirths",23},{"3M Rebirths",24},{"6M Rebirths",25},{"10M Rebirths",26},{"14M Rebirths",27},{"20M Rebirths",28},{"27M Rebirths",29},{"35M Rebirths",30},{"50M Rebirths",31},{"78M Rebirths",32},{"100M Rebirths",33},{"150M Rebirths",34},{"200M Rebirths",35},{"300M Rebirths",36},{"500M Rebirths",37},{"750M Rebirths",38},{"1B Rebirths",39},{"2.5B Rebirths",40},{"5B Rebirths",41},{"8B Rebirths",42},{"12B Rebirths",43},{"20B Rebirths",44},{"40B Rebirths",45},{"60B Rebirths",46},{"90B Rebirths",47},{"110B Rebirths",48},{"130B Rebirths",49},{"200B Rebirths",50},{"250B Rebirths",51},{"300B Rebirths",52},{"400B Rebirths",53},{"500B Rebirths",54},{"600B Rebirths",55},{"700B Rebirths",56},{"800B Rebirths",57},{"900B Rebirths",58},{"1.5t Rebirths",59},{"2t Rebirths",60},{"3t Rebirths",61},{"5t Rebirths",62},{"7.5t Rebirths",63},{"10t Rebirths",64},{"20t Rebirths",65},{"30t Rebirths",66},{"40t Rebirths",67},{"50t Rebirths",68},{"75t Rebirths",69},{"100t Rebirths",70},{"200t Rebirths",71},{"400t Rebirths",72},{"800t Rebirths",73},{"1Qa Rebirths",74},{"2Qa Rebirths",75},{"4Qa Rebirths",76},{"8Qa Rebirths",77},{"10Qa Rebirths",78},{"20Qa Rebirths",79},{"40Qa Rebirths",80},{"60Qa Rebirths",81},{"80Qa Rebirths",82},{"100Qa Rebirths",83},{"200Qa Rebirths",84},{"400Qa Rebirths",85},{"600Qa Rebirths",86},{"800Qa Rebirths",87},{"1Qi Rebirths",88},{"2Qi Rebirths",89},{"4Qi Rebirths",90},{"8Qi Rebirths",91},{"10Qi Rebirths",92},{"20Qi Rebirths",93},{"40Qi Rebirths",94},{"60Qi Rebirths",95},{"80Qi Rebirths",96},{"100Qi Rebirths",97},{"200Qi Rebirths",98},{"400Qi Rebirths",99},{"600Qi Rebirths",100},{"800Qi Rebirths",101},{"1s Rebirths",102},{"2s Rebirths",103},{"4s Rebirths",104},{"6s Rebirths",105},{"8s Rebirths",106},{"10s Rebirths",107},{"20s Rebirths",108},{"40s Rebirths",109},{"60s Rebirths",110},{"80s Rebirths",111},{"100s Rebirths",112},{"200s Rebirths",113},{"400s Rebirths",114},{"600s Rebirths",115},{"800s Rebirths",116},{"1Sp Rebirths",117}
+    },
+    Callback = function(v)
+        selectedRebirths = v;
+    end,})
+    mainTab:toggle{
+        Name = "Activate Auto Rebirths",
+        Callback = function(v)
+            getgenv().autoRebirth = v
+            if v and selectedRebirths then
+                autoRebirth(selectedRebirths);
+            end
+end}
+
+local teggs;
+eggTab:dropdown({
+    Name = "Select Egg To Open",
+    StartingText = "Select",
+    Items = {"Basic Egg","Epic Egg","Floppa Egg","Youtube Egg","Desert Egg","Desert Myths Egg","Desert Structures Egg","Egyptian Gods Egg","Oceanic Egg","Ocean Monsters Egg","Ocean King Egg","Ocean Structures Egg","Dead Egg","Lava Egg","Volcanic Egg","Lava God Egg","Candy Egg","Candy Monsters Egg","Candy Structures Egg","Candy War Egg","Beach Egg","Coconut Egg","Toxic Egg","Anime Egg","Russo Egg","City Egg","Ninja Egg","Angelic Egg","Seraphim Egg","Moon Egg","Asteroid Egg","Hell Egg","Xmas Egg","Xmas Youtuber Egg"},true,
+    Callback = function(v)
+        hatcharg = {
+            [1] = v,
+            [2] = "Triple",
+            [3] = "asdgouhsaiugdhasoiudghodsagfasdgdsaoughsadoug"
+        }
+        teggs = v;
+    end})
+
+    eggTab:toggle{
+        Name = "Hatch 3 Eggs",
+        Callback = function(v)
+            getgenv().autoHatch = v
+            if v then
+                if hatcharg then
+                    wait(5)
+                autoHatch(hatcharg)
+            end
+        end
+end}
+
+miscTab:slider({
+    Name = "Walk Speed",
+    Description = nil,
+    Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
+    end
+})
+
+miscTab:button({
+    Name = "Rejoin Server",
+    Description = nil,
+    Callback = function()
+    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
+end})
+
+local selectedChest;
+chestTab:dropdown({
+    Name = "Select Chest To Open",
+    StartingText = "Select",
+    Items = {
+        "Common Chest","Uncommon Chest","Rare Chest","Epic Chest","Legendary Chest","Secret Chest"
+    },
+    Callback = function(v)
+        selectedChest = v;
+    end})
+    miscTab:toggle{
+        Name = "Buy Chest",
+        Callback = function(v)
+            getgenv().autoChest = v
+            if v and selectedChest then
+                autoChest(selectedChest)
+            end
+end}
+
+gui:notification{
+	Title = "Alert",
+	Text = "Contact Me On Discord If Anything Stops Working",
+	Duration = 5,
+	Callback = function() end
+}
