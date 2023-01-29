@@ -9,7 +9,10 @@ elseif game.PlaceId == 4058282580 then -- Boxing Simulator
   
 elseif game.PlaceId == 11220569194 then -- Clicker Party Simulator
     loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/CPS"))()
-  
+
+elseif game.PlaceId == 10944357250 then -- Stair Legends
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/SL"))()
+
 else
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/Universal"))()  --Universal
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/Universal"))()  -- Universal
 end
