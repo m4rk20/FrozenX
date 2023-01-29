@@ -1,0 +1,131 @@
+getgenv().AC = false;
+
+function autoClimb()
+    spawn(function()
+        while getgenv().AC == true do
+            game:GetService("ReplicatedStorage").Framework.Knit.Services.PlayerLogic.RF.Move:InvokeServer(24)
+            wait()
+        end
+    end)
+end
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/myscripts/main/MercuryUI"))()
+
+local gui = Library:create{
+    Theme = Library.Themes.Serika
+}
+
+local mainTab = gui:tab{
+    Icon = "rbxassetid://6034996695",
+    Name = "Main"
+}
+
+local miscTab = gui:tab{
+    Icon = "rbxassetid://8559790237",
+    Name = "Miscellaneous"
+}
+
+mainTab:toggle({
+    Name = "Auto Climb",
+    Description = nil,
+    Callback = function(v)
+        getgenv().AC = v
+        if v then
+            autoClimb();
+        end
+    end
+})
+
+mainTab:button({
+    Name = "Go To Game",
+    Description = nil,
+    Callback = function()
+        local args = {[1] = true}
+        game:GetService("ReplicatedStorage").Framework.Knit.Services.PlayerLogic.RF.SetInGame:InvokeServer(unpack(args))
+    end
+})
+
+miscTab:slider{
+    Name = "Walk Speed",
+    Default = 50,
+    Min = 0,
+    Max = 100,
+    Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
+    end
+}
+
+miscTab:slider{
+	Name = "Jump Power",
+	Default = 50,
+	Min = 0,
+	Max = 100,
+	Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = v
+    end
+}
+
+miscTab:button({
+    Name = "NoClip",
+    Description = nil,
+    Callback = function(v)
+        local Noclip = nil
+        local Clip = nil
+
+        function noclip()
+            Clip = false
+            local function Nocl()
+                if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+                    for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                        if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+                            v.CanCollide = false
+                        end
+                    end
+                end
+                wait(0.21)
+            end
+            Noclip = game:GetService('RunService').Stepped:Connect(Nocl)
+        end
+
+        function clip()
+            if Noclip then Noclip:Disconnect() end
+            Clip = true
+        end
+
+        noclip()
+end})
+
+miscTab:button({
+    Name = "Anti-Report",
+    Description = nil,
+    Callback = function()
+        setfflag("AbuseReportScreenshot", "False")
+        setfflag("AbuseReportScreenshotPercentage", "0")
+end})
+
+miscTab:button({
+    Name = "Anti AFK",
+    Description = nil,
+    Callback = function()
+        local vu = game:GetService("VirtualUser")
+            game:GetService("Players").LocalPlayer.Idled:connect(function()
+            vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+            wait(1)
+            vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        end)
+    end
+})
+
+gui:credit{
+	Name = "Ryan",
+	Description = nil,
+	V3rm = nil,
+	Discord = "RyanR#8147"
+}
+
+gui:notification{
+	Title = "Alert",
+	Text = "Contact Me On Discord If Anything Stops Working",
+	Duration = 5,
+	Callback = function() end
+}
