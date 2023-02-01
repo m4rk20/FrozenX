@@ -1,0 +1,416 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/myscripts/main/MercuryUI"))()
+
+local net = require(game:GetService("ReplicatedStorage").Modules.Network)
+local plr = game.Players.LocalPlayer
+local cha = plr.Character or plr.CharacterAdded:Wait()
+local hrp = cha:WaitForChild("HumanoidRootPart")
+local hum = cha:WaitForChild("Humanoid")
+local exclusions = {}
+local chunks = nil 
+local eggs = {}
+
+for i,v in pairs(game:GetService("Workspace").GameObjects.Eggs:GetChildren()) do 
+    if (not table.find(eggs, v.Name)) then 
+        table.insert(eggs, v.Name)
+        table.sort(eggs)
+    end 
+end 
+
+for i,v in pairs(plr.PlayerScripts.Modules.Controllers:GetChildren()) do 
+    if string.find(v.Name, "0.") then 
+        chunks = require(v) 
+    end 
+end 
+
+local function loadchunks()
+    for i,v in pairs(game.ReplicatedStorage.Chunks:GetChildren()) do 
+        chunks:UpdateFolder(v.Name, true)
+    end 
+end 
+
+plr.CharacterAdded:Connect(function(character)
+    cha = character 
+    hrp = cha:WaitForChild("HumanoidRootPart")
+    hum = cha:WaitForChild("Humanoid")
+end)
+
+local gui = Library:create{
+    Theme = Library.Themes.Serika
+}
+
+local mainTab = gui:tab{
+    Icon = "rbxassetid://6034996695",
+    Name = "Main"
+}
+
+local eggTab = gui:tab{
+    Icon = "rbxassetid://3081760043",
+    Name = "Eggs"
+}
+
+local miscTab = gui:tab{
+    Icon = "rbxassetid://8559790237",
+    Name = "Miscellaneous"
+}
+
+local uiTab = gui:tab{
+    Icon = "rbxassetid://4935580111",
+    Name = "UI"
+}
+
+local new = Instance.new("Folder")
+new.Name = "Fast Hatching"
+new.Parent = game.Players.LocalPlayer.Passes
+
+local new = Instance.new("Folder")
+new.Name = "Magnet Range"
+new.Parent = game.Players.LocalPlayer.Passes
+
+local oldm1 
+oldm1 = hookmetamethod(game, "__namecall", function(self, ...)
+    if self == plr and getnamecallmethod():lower() == "kick" and (not checkcaller()) then 
+        return
+    end
+    return oldm1(self, ...)
+end)
+
+wait(2)
+
+local oldmt 
+oldmt = hookmetamethod(game, "__index", function(self, index)
+    if self == hum and index == ("WalkSpeed" or "JumpPower") and (not checkcaller()) then 
+        return 1000000 
+    end 
+    return oldmt(self, index)
+end)
+
+function getclosestfirework(only, what)
+    local closest = nil 
+    local maxdist = math.huge
+    if game.Workspace.GameObjects.Areas:FindFirstChild(b) and game.Workspace.GameObjects.Areas[b]:FindFirstChild("Items") then
+    for i,v in pairs(game.Workspace.GameObjects.Areas[b].Items:GetChildren()) do 
+        if v:FindFirstChild("Hitbox") and v:FindFirstChild("Info") and v.Info:FindFirstChild("Health") and v.Info.Health.Value > 0 then
+            if only then 
+                local magnitude = (v.Hitbox.Position - hrp.Position).Magnitude 
+                if magnitude < maxdist then 
+                    maxdist = magnitude 
+                    closest = v
+                end 
+            elseif only == false and (string.find(v.Name, what)) then 
+                local magnitude = (v.Hitbox.Position - hrp.Position).Magnitude 
+                if magnitude < maxdist then 
+                    maxdist = magnitude 
+                    closest = v
+                end 
+            end 
+        end 
+    end 
+    end
+    return closest 
+end
+
+local function getclosest()
+    local closest = nil 
+    local maxdist = math.huge 
+    for i,v in pairs(game.Workspace.GameObjects.Areas:GetChildren()) do 
+        if v:IsA("Folder") and v:FindFirstChild("Items") then 
+            for i1,v1 in pairs(v:FindFirstChild("Items"):GetChildren()) do 
+                if v1:FindFirstChild("Hitbox") and v1:FindFirstChild("Info") and v1.Info:FindFirstChild("Health") and v1.Info.Health.Value > 0 then 
+                    local magnitude = (v1:FindFirstChild("Hitbox").Position - hrp.Position).Magnitude 
+                    if magnitude < maxdist then 
+                        maxdist = magnitude 
+                        closest = v1
+                    end 
+                end 
+            end 
+        end 
+    end 
+    return closest 
+end 
+
+mainTab:toggle({
+    Name = "Auto Farm Area (All)",
+    Flag = "AFA",
+    Callback = function(state)
+        a = state
+        while a and task.wait() do
+            pcall(function()
+                if getclosestfirework(true, nil):FindFirstChild("Hitbox") and (hrp.Position - getclosestfirework(true, nil).Hitbox.Position).Magnitude > 3 then
+                    hrp.CFrame = getclosestfirework(true, nil):FindFirstChild("Hitbox").CFrame
+                    wait(.1)
+                    if (not qr) then
+                        fireclickdetector(getclosestfirework(true, nil):FindFirstChild("Hitbox").ClickDetector)
+                    end
+                end
+            end)
+        end
+    end
+})
+
+mainTab:toggle({
+    Name = "Auto Farm Area (Target)",
+    Callback = function(state)
+        pq = state 
+        while pq and task.wait() do 
+            pcall(function()
+                if getclosestfirework(false, p):FindFirstChild("Hitbox") and (hrp.Position - getclosestfirework(false, p).Hitbox.Position).Magnitude > 3 then 
+                    hrp.CFrame = getclosestfirework(false, p):FindFirstChild("Hitbox").CFrame
+                    wait(.1)
+                    if (not qr) then 
+                        fireclickdetector(getclosestfirework(false, p):FindFirstChild("Hitbox").ClickDetector)
+                    end 
+                end
+            end)
+        end 
+    end 
+})
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    if (a or pq) then 
+        task.wait(1)
+        loadchunks()
+    end 
+end)
+
+mainTab:dropdown({
+    Name = "Select Target",
+    Flag = "Target",
+    Items = {"Firework", "Huge Firework", "Box", "Gem"},
+    Callback = function(selected)
+        p = selected
+    end
+})
+
+local arealist = {}
+for i,v in pairs(game.Workspace.GameObjects.Areas:GetChildren()) do 
+    if (not table.find(arealist, v.Name)) then 
+        table.insert(arealist, v.Name)
+        table.sort(arealist)
+    end 
+end
+
+mainTab:dropdown({
+    Name = "Select Area",
+    Flag = "Areas",
+    Items = arealist,
+    Callback = function(selected)
+        b = selected
+    end
+})
+
+mainTab:toggle({
+    Name = "Kill Aura",
+    Flag = "KA",
+    CurrentValue = false,
+    Callback = function(state)
+        qr = state
+    end 
+})
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    if qr then 
+        net:FireServer("Hit1", getclosest())
+    end 
+end)
+
+mainTab:toggle({
+    Name = "Collect Drops",
+    Flag = "Coins",
+    CurrentValue = false,
+    Callback = function(state)
+        c = state 
+        while c and task.wait() do 
+            for i,v in pairs(game.Workspace.Orbs:GetChildren()) do 
+                net:FireServer("CollectOrb", v.Name)
+                v:Destroy()
+            end
+        end 
+    end
+})
+
+eggTab:toggle({
+    Name = "Loop Hatch",
+    Flag = "Hatch",
+    CurrentValue = false,
+    Callback = function(state)
+        lol = state 
+        while lol and task.wait() do 
+            net:InvokeServer("OpenEgg", l, pql, exclusions)
+        end 
+    end 
+})
+
+eggTab:slider({
+    Name = "Egg Amount",
+    Flag = "Egg Amount", 
+    Default = 1,
+    Min = 1, 
+    Max = 3,
+    Callback = function(amount)
+        pql = amount 
+    end 
+})
+
+eggTab:dropdown({
+    Name = "Select Egg",
+    Description = "Some Eggs Are No Longer In Game",
+    Flag = "Eggss",
+    Items = eggs, 
+    Callback = function(selected)
+        l = selected 
+    end 
+})
+
+eggTab:textbox{
+	Name = "Exclude Pet Name",
+    Description = "Case Sensitive",
+    CurrentValue = "Case Sensitive",
+	Callback = function(args) 
+        if tostring(args) ~= "Case Sensitive" then
+            exclusions[args] = true
+        end
+    end
+}
+
+eggTab:button({
+    Name = "View Exclusions",
+    Callback = function()
+        for i,v in pairs(exclusions) do
+            gui:notification{
+                Title = "Exclusions",
+                Text = i,
+                Duration = 3,
+                Callback = function() end
+            }
+        end
+    end
+})
+
+eggTab:button({
+    Name = "Clear Exclusions",
+    Callback = function()
+        table.clear(exclusions)
+    end 
+})
+
+miscTab:slider{
+    Name = "Walk Speed",
+    Default = 16,
+    Min = 16,
+    Max = 500,
+    Callback = function(num)
+        hum.WalkSpeed = num
+    end
+}
+
+miscTab:slider({
+    Name = "JumpPower",
+    Default = 50,
+    Min = 50, 
+    Max = 500,
+    Callback = function(num)
+        hum.JumpPower = num 
+    end 
+})
+
+miscTab:button({
+    Name = "NoClip",
+    Description = nil,
+    Callback = function(v)
+        local Noclip = nil
+        local Clip = nil
+
+        function noclip()
+            Clip = false
+            local function Nocl()
+                if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+                    for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                        if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+                            v.CanCollide = false
+                        end
+                    end
+                end
+                wait(0.21)
+            end
+            Noclip = game:GetService('RunService').Stepped:Connect(Nocl)
+        end
+
+        function clip()
+            if Noclip then Noclip:Disconnect() end
+            Clip = true
+        end
+
+        noclip()
+end})
+
+miscTab:button({
+    Name = "Rejoin Server",
+    Description = nil,
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        local Rejoin = coroutine.create(function()
+            local Success, ErrorMessage = pcall(function()
+                TeleportService:Teleport(game.PlaceId, LocalPlayer)
+            end)
+        
+            if ErrorMessage and not Success then
+                warn(ErrorMessage)
+            end
+        end)
+        
+        coroutine.resume(Rejoin)
+end})
+
+miscTab:button({
+    Name = "Anti-Report",
+    Description = nil,
+    Callback = function()
+        setfflag("AbuseReportScreenshot", "False")
+        setfflag("AbuseReportScreenshotPercentage", "0")
+end})
+
+miscTab:toggle{
+    Name = "Anti AFK",
+    Callback = function(state)
+        if state then
+            ToggleAntiAfk = true
+        elseif not state then
+            ToggleAntiAfk = false
+        end
+end}
+
+miscTab:button({
+    Name = "Disable Nametag",
+    Callback = function()
+        User.Character.Head.Player:Destroy()
+    end
+})
+
+uiTab:button({
+    Name = "Toggle Selected UI",
+    Callback = function()
+        plr.PlayerGui.GameUI.Menus[q].Visible = not plr.PlayerGui.GameUI.Menus[q].Visible
+    end 
+})
+
+local uilist = {"Bank", "Golden", "Shiny", "Diamond", "Rainbow", "Upgrades", "Merchant"}
+table.sort(uilist)
+
+uiTab:dropdown({
+    Name = "Select UI",
+    Flag = "UI",
+    Items = uilist,
+    Callback = function(selected)
+        q = selected
+    end
+})
+
+gui:notification{
+	Title = "Alert",
+	Text = "Contact Me On Discord If Anything Stops Working",
+	Duration = 5,
+	Callback = function() end
+}
