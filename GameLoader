@@ -13,8 +13,9 @@ elseif game.PlaceId == 11220569194 then -- Clicker Party Simulator
 elseif game.PlaceId == 10944357250 then -- Stair Legends
     loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/SL"))()
 
-elseif game.PlaceId == 8962384769 then --Firework Simulator X
+elseif game.PlaceId == 8962384769 then -- Firework Simulator X
     loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/FS"))()
 
+else
     loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/Universal"))()  -- Universal
 end
