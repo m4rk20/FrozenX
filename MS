@@ -180,3 +180,90 @@ eggTab:toggle{
         end
     end
 )
+
+miscTab:slider{
+    Name = "Walk Speed",
+    Default = 50,
+    Min = 0,
+    Max = 100,
+    Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
+    end
+}
+
+miscTab:slider{
+	Name = "Jump Power",
+	Default = 50,
+	Min = 0,
+	Max = 100,
+	Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = v
+    end
+}
+
+miscTab:button({
+    Name = "NoClip",
+    Description = nil,
+    Callback = function(v)
+        local Noclip = nil
+        local Clip = nil
+
+        function noclip()
+            Clip = false
+            local function Nocl()
+                if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+                    for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                        if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+                            v.CanCollide = false
+                        end
+                    end
+                end
+                wait(0.21)
+            end
+            Noclip = game:GetService('RunService').Stepped:Connect(Nocl)
+        end
+
+        function clip()
+            if Noclip then Noclip:Disconnect() end
+            Clip = true
+        end
+
+        noclip()
+end})
+
+miscTab:button({
+    Name = "Anti-Report",
+    Description = nil,
+    Callback = function()
+        setfflag("AbuseReportScreenshot", "False")
+        setfflag("AbuseReportScreenshotPercentage", "0")
+end})
+
+miscTab:button({
+    Name = "Disable Nametag",
+    Callback = function()
+        User.Character.Head.Player:Destroy()
+    end
+})
+
+miscTab:button({
+    Name = "Disable Anticheat",
+    Description = nil,
+    Callback = function()
+        User.Character.Humanoid.WalkSpeed = 100
+        local old; old = hookmetamethod(game, "__namecall", function(self, ...)
+            if self == User and getnamecallmethod() == "Kick" and not checkcaller() then
+                User.Character.Humanoid.WalkSpeed = 16
+                disabled = true
+                return task.wait(99e99)
+            end
+            return old(self, ...)
+        end)
+end})
+
+gui:notification{
+	Title = "Alert",
+	Text = "Contact Me On Discord If Anything Stops Working",
+	Duration = 5,
+	Callback = function() end
+}
