@@ -165,7 +165,7 @@ Main:CreateButton({
 	Callback = function()
 		for _,v in pairs({"release", "wow500likes", "likes1000thx", "update1", "newgame", "thx2500likes", "update2", "visits2m"}) do
 			game:GetService("ReplicatedStorage").Knit.Services.CodeService.RF.UseCode:InvokeServer(v)
-			print("[Inferno X] Debug: Redeemed code "..v)
+			print("[Frozen X] Debug: Redeemed code "..v)
 			task.wait(2)
 		end
 	end,
@@ -281,7 +281,7 @@ local function Giant(ToGiant, ScrollingFrame, Remote)
 
 			for e = 1, 5 do
 				Selected[Items[i].Ids[e]] = true
-				print("[Inferno X] Debug: Selected Giant ID "..Items[i].Ids[e])
+				print("[Frozen X] Debug: Selected Giant ID "..Items[i].Ids[e])
 			end
 
 			Services.GiantService.RF[Remote]:InvokeServer({["Current"..ToGiant] = Items[i].Ids[1], ["Chosen"] = Selected})
