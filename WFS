@@ -1,0 +1,133 @@
+local Player = game:GetService("Players").LocalPlayer or game:GetService("Players").PlayerAdded:Wait()
+local remotePath = game:GetService("ReplicatedStorage").CommonLibrary.Tool.RemoteManager
+
+local attackLooping
+local killauraLooping
+local bossLooping
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/myscripts/main/MercuryUI"))()
+
+local gui = Library:create{
+    Theme = Library.Themes.Serika
+}
+
+local mainTab = gui:tab{
+    Icon = "rbxassetid://6034996695",
+    Name = "Main"
+}
+
+local eggTab = gui:tab{
+    Icon = "rbxassetid://3081760043",
+    Name = "Eggs"
+}
+
+local miscTab = gui:tab{
+    Icon = "rbxassetid://8559790237",
+    Name = "Miscellaneous"
+}
+
+mainTab:toggle{
+    Name = "⚔ Auto Attack Closest",
+	Description = "Attacks & teleports to the closest enemy",
+	Callback = function(Value)
+        attackLooping = Value
+    end,
+}
+
+task.spawn(function()
+    while task.wait() do
+        if attackLooping then
+            local currentNumber = math.huge
+            local currentEnemy
+
+            for i,v in pairs(workspace.Fight.ClientChests:GetChildren()) do
+                if Player.Character:FindFirstChild("HumanoidRootPart") then
+                    local Magnitude = (Player.Character.HumanoidRootPart.Position - v.Root.Position).Magnitude
+                    if Magnitude < currentNumber then
+                        currentNumber = Magnitude
+                        currentEnemy = v.Name
+                    end
+                end
+            end
+            if currentEnemy then
+                workspace.Fight.Events.FightAttack:InvokeServer(0, currentEnemy)
+            end
+        end
+    end
+end)
+
+mainTab:toggle{
+    Name = "🌪 Killaura",
+	Description = "Attacks every enemy within 30 studs of you",
+	Callback = function(Value)
+        killauraLooping = Value
+    end,
+}
+
+task.spawn(function()
+    while task.wait() do
+        if killauraLooping then
+            for i,v in pairs(workspace.Fight.ClientChests:GetChildren()) do
+                if v:FindFirstChild("Root") and Player.Character:FindFirstChild("HumanoidRootPart") and (Player.Character.HumanoidRootPart.Position - v.Root.Position).Magnitude <= 30 then
+                    workspace.Fight.Events.FightAttack:InvokeServer(0, v.Name)
+                end
+            end
+        end
+    end
+end)
+
+mainTab:toggle{
+    Name = "🐉 Auto Fight Best Boss",
+	Description = "Automatically fights your best world's boss (must be at world)",
+	Callback = function(Value)
+        bossLooping = Value
+    end,
+}
+
+task.spawn(function()
+    while task.wait() do
+        if bossLooping then
+            local currentNumber = 0
+
+			for i,v in pairs(workspace.Fight:GetChildren()) do
+				if v.Name:match("FightArea") and tonumber(v.Name:split("FightArea_")[2]:split("_")[1]) > currentNumber then
+					currentNumber = tonumber(v.Name:split("FightArea_")[2]:split("_")[1])
+				end
+			end
+
+            remotePath.Funcs.BossRoomEnterFunc:InvokeServer(currentNumber, "room2")
+            remotePath.Events.BossRoomStartEvent:FireServer(currentNumber, "room2")
+            remotePath.Events.BossRoomLeaveEvent:FireServer(currentNumber, "room2")
+
+            local good
+
+			repeat
+				for i,v in pairs(workspace.Fight:GetChildren()) do
+					if v.Name:match("FightArena") then
+						good = v.Name:split("FightArena_")[2]
+					end
+				end
+				task.wait()
+			until good
+
+            local Boss = game:GetService("Workspace").Fight.Chests:FindFirstChild(good.."_Boss_1")
+
+            repeat task.wait() until Boss
+
+            Player.Character.HumanoidRootPart.CFrame = Boss.MonsterCFrame.Value
+            task.wait(1)
+            workspace.Fight.Events.FightAttack:InvokeServer(0, good.."_Boss_1")
+
+            repeat
+                if Boss and Player.Character:FindFirstChild("HumanoidRootPart") then
+                    Player.Character.HumanoidRootPart.CFrame = Boss.MonsterCFrame.Value
+                end
+                task.wait()
+            until not game:GetService("Workspace").Fight.Chests:FindFirstChild(good.."_Boss_1") or not bossLooping
+
+            task.wait(1)
+
+            remotePath.Funcs.DataPullFunc:InvokeServer("ArenaTeleportLeaveChannel", "Out")
+        end
+    end
+end)
