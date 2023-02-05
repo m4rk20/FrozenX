@@ -312,3 +312,63 @@ task.spawn(function()
 		end
 	end
 end)
+
+Items:CreateToggle({
+	Name = "🌈 Auto Rainbow Pets",
+	Info = "Turns 5 of the same pet into a rainbow!",
+	CurrentValue = false,
+	Flag = "RainbowPets",
+	Callback = function(Value) end,
+})
+
+local function Rainbow(ToRainbow, ScrollingFrame, Remote)
+	local Items = {}
+
+	for i,v in pairs(Player.PlayerGui.Main.Prompts.Rainbow[ScrollingFrame]:GetChildren()) do
+		if v.ClassName == "ImageButton" then
+			if not Items[v.Icon.Image] then
+				Items[v.Icon.Image] = {Amount = 1, Ids = {v.Name}}
+			else
+				table.insert(Items[v.Icon.Image].Ids, v.Name)
+				Items[v.Icon.Image].Amount = Items[v.Icon.Image].Amount + 1
+			end
+		end
+	end
+
+	for i,v in pairs(Items) do
+		if v.Amount >= 5 then
+			local Selected = {}
+
+			for e = 1, 5 do
+				Selected[Items[i].Ids[e]] = true
+				print("[Frozen X] Debug: Selected Rainbow ID "..Items[i].Ids[e])
+			end
+
+			Services.RainbowService.RF[Remote]:InvokeServer({["Current"..ToRainbow] = Items[i].Ids[1], ["Chosen"] = Selected})
+		end
+	end
+end
+
+task.spawn(function()
+	while task.wait() do
+		if Rayfield.Flags.RainbowPets.CurrentValue then
+			Rainbow("Pet", "ScrollingFramePets","RequestRainbowPet")
+		end
+	end
+end)
+
+Items:CreateToggle({
+	Name = "🌈 Auto Rainbow Pickaxes",
+	Info = "Turns 5 of the same pickaxe into a rainbow!",
+	CurrentValue = false,
+	Flag = "RainbowPicks",
+	Callback = function(Value) end,
+})
+
+task.spawn(function()
+	while task.wait() do
+		if Rayfield.Flags.RainbowPets.CurrentValue then
+			Rainbow("Pickaxe", "ScrollingFrame", "RequestRainbow")
+		end
+	end
+end)
