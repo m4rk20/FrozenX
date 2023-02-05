@@ -16,6 +16,12 @@ elseif game.PlaceId == 10944357250 then
 elseif game.PlaceId == 8962384769 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/FS"))()
 
+elseif game.PlaceId == 10821317529 then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/PMS"))()
+
+elseif game.PlaceId == 10925589760 then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/MS"))()
+
 else
     loadstring(game:HttpGet("https://raw.githubusercontent.com/m4rk20/FrozenX/main/Universal"))()   
 end
